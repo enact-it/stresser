@@ -52,7 +52,6 @@ jobs:
           makeLatest: true
           name: ${{ steps.semver.outputs.next }}
           tag: ${{ steps.semver.outputs.next }}
-          body: Changelog Contents
           token: ${{ github.token }}
 
   build-and-push-image:
