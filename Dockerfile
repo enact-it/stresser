@@ -15,5 +15,3 @@ WORKDIR /app
 COPY --from=builder /app/stresser .
 
 ENTRYPOINT ["./stresser"]
-
-

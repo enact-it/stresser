@@ -9,16 +9,58 @@ env:
   IMAGE_NAME: ${{ github.repository }}
 
 jobs:
-  build-and-push-image:
-    runs-on: ubuntu-latest
+  pre-commit:
     permissions:
       contents: read
+    name: Pre-commit check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout git repository
+        uses: actions/checkout@v08c6903cd8c0fde910a37f88322edcfb5dd907a8
+      - name: Setup python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.14"
+      - uses: actions/setup-go@v6
+        with:
+          go-version: "^1.24.0" # The Go version to download (if necessary) and use.
+      - name: Pre-commit checks
+        uses: pre-commit/action@v5.0.0
+
+  build-and-push-image:
+    runs-on: ubuntu-latest
+    needs: pre-commit
+    permissions:
+      contents: write
       packages: write
       attestations: write
       id-token: write
     steps:
       - name: Checkout repository
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8
+
+      - name: Get Next Version
+        id: semver
+        uses: ietf-tools/semver-action@v1
+        with:
+          token: ${{ github.token }}
+          branch: main
+
+      - name: Create Release
+        uses: ncipollo/release-action@v1.20.0
+        with:
+          allowUpdates: true
+          draft: false
+          makeLatest: true
+          name: ${{ steps.semver.outputs.next }}
+          body: Changelog Contents
+          token: ${{ github.token }}
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@29109295f81e9208d7d86ff1c6c12d2833863392
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@e468171a9de216ec08956ac3ada2f0791b6bd435
 
       - name: Log in to the Container registry
         uses: docker/login-action@28fdb31ff34708d19615a74d67103ddc2ea9725c
@@ -37,6 +79,7 @@ jobs:
         id: push
         uses: docker/build-push-action@9e436ba9f2d7bcd1d038c8e55d039d37896ddc5d
         with:
+          platforms: linux/amd64,linux/arm64,linux/arm/v6,linux/arm/v7,linux/arm/v8
           context: .
           push: true
           tags: ${{ steps.meta.outputs.tags }}
