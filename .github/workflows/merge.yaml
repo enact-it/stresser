@@ -28,6 +28,7 @@ jobs:
         uses: pre-commit/action@v3.0.1
 
   build-and-push-image:
+    name: Build and push image
     runs-on: ubuntu-latest
     needs: pre-commit
     permissions:
