@@ -3,6 +3,8 @@ name: Lint, tag, release
 on:
   push:
     branches: ["main"]
+    tags:
+      - "v*"
 
 env:
   REGISTRY: ghcr.io
