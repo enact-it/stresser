@@ -41,7 +41,7 @@ func burnCPU(cpus int) {
 	if err != nil {
 		log.Fatalf("failed to open /dev/zero")
 	}
-	for i := 0; i < cpus; i++ {
+	for i := range cpus {
 		log.Printf("Spawning thread %d to consume CPU", i)
 		go func() {
 			_, err := io.Copy(io.Discard, src)
