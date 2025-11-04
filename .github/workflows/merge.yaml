@@ -53,7 +53,8 @@ jobs:
           allowUpdates: true
           draft: false
           makeLatest: true
-          name: ${{ steps.semver.outputs.next }}
+          name: ${{ steps.semver.outputs.nextStrict }}
+          tag: ${{ steps.semver.outputs.nextStrict }}
           body: Changelog Contents
           token: ${{ github.token }}
 
