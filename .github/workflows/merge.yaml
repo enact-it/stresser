@@ -34,6 +34,8 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+    outputs:
+      tag: ${{ steps.semver.outputs.next }}
     steps:
       - name: Get Next Version
         id: semver
@@ -89,7 +91,7 @@ jobs:
           tags: |
             type=ref,event=branch
             type=ref,event=pr
-            type=semver,pattern={{raw}}
+            type=semver,pattern={{raw}},value=${{ needs.tag-and-release.outputs.tag }}
 
       - name: Build and push Docker image
         id: push
