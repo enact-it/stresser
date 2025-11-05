@@ -35,7 +35,7 @@ jobs:
     permissions:
       contents: write
     outputs:
-      tag: ${{ steps.semver.outputs.next }}
+      tag: ${{ steps.semver.outputs.nextStrict }}
     steps:
       - name: Get Next Version
         id: semver
@@ -51,7 +51,7 @@ jobs:
           draft: false
           makeLatest: true
           name: ${{ steps.semver.outputs.next }}
-          tag: ${{ steps.semver.outputs.next }}
+          tag: ${{ steps.semver.outputs.nextStrict }}
           token: ${{ github.token }}
 
   build-and-push-image:
