@@ -43,6 +43,7 @@ jobs:
         with:
           token: ${{ github.token }}
           branch: main
+          noVersionBumpBehavior: patch
 
       - name: Create Release
         uses: ncipollo/release-action@v1.20.0
