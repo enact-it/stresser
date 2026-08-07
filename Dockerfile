@@ -1,4 +1,4 @@
-FROM golang:tip-alpine3.22 AS builder
+FROM golang:tip-alpine3.24@sha256:422f67633830b5598bbd54f95bc3589da89f2fb157aecacada909fa817192912 AS builder
 
 WORKDIR /app
 COPY main.go go.mod go.sum ./
